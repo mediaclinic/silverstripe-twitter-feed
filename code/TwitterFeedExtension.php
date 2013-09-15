@@ -2,8 +2,8 @@
 /**
  *
  *
- * @author Tyler Kidd <tyler@adaircreative.com>
- * @date 12.05.2012
+ * @author Mediaclinic -> forked from Tyler Kidd <tyler@adaircreative.com>
+ * @date 15.9.2013
  * @package silverstripe-twitter-feed
  */
 class TwitterFeedExtension extends SiteTreeExtension {
@@ -64,16 +64,42 @@ class TwitterFeedExtension extends SiteTreeExtension {
 					
 					$text = $tweet->text;
 
+					$user = $tweet->user->name;
+					$screenname = $tweet->user->screen_name;
+					$description = $tweet->user->description;
+					$profile_image = $tweet->user->profile_image_url;
+					$followers_count = $tweet->user->followers_count;
+					$friends_count = $tweet->user->friends_count;
+					$favourites_count = $tweet->user->favourites_count;
+					$retweet_count = $tweet->retweet_count;
+					$favorite_count = $tweet->favorite_count;
+					$favorited = $tweet->favorited;
+					$retweeted = $tweet->retweeted;
+					$retweet_link =  "http://twitter.com/home?status=".urlencode("RT " . $screenname . $text);
+					$in_reply_to_link = "http://twitter.com/?status=".$screenname. "&in_reply_to_status_id=".$tweet->id;
+
 					if($tweet->entities && $tweet->entities->urls){
 						foreach($tweet->entities->urls as $url){
 							$text = str_replace($url->url, '<a href="'.$url->url.'" target="_blank">'.$url->url.'</a>',$text);
 						}
 					}
 
+					if($tweet->entities && $tweet->entities->urls){
+						foreach($tweet->entities->user_mentions as $user_mention){
+							$text = str_replace($user_mention->screen_name, '<a href="//twitter.com/'.$user_mention->screen_name.'" target="_blank" title="'.$user_mention->name.'">'.$user_mention->screen_name.'</a>',$text);
+						}
+					}
+
 					$tweetList->push(
 						new ArrayData(array(
 							'Title' => $text,
-							'Date' => $date
+							'Date' => $date,
+							'User' => $user,
+							'ScreenName' => $screenname,
+							'ProfileImage' => $profile_image,
+							'Retweet' => $retweet_link,
+							'Reply' => $in_reply_to_link
+							
 						))
 					);
 	
