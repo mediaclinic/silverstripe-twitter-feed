@@ -80,7 +80,13 @@ class TwitterFeedExtension extends SiteTreeExtension {
 
 					if($tweet->entities && $tweet->entities->urls){
 						foreach($tweet->entities->urls as $url){
-							$text = str_replace($url->url, '<a href="'.$url->url.'" target="_blank">'.$url->url.'</a>',$text);
+							$text = str_replace($url->url, '<a href="'.$url->url.'" target="_blank" title="'.$url->url.'">'.$url->url.'</a>',$text);
+						}
+					}
+
+					if($tweet->entities && $tweet->entities->media){
+						foreach($tweet->entities->media as $media){
+							$text = str_replace($media->url, '<a href="'.$media->url.'" target="_blank">'.$media->url.'</a>',$text);
 						}
 					}
 
